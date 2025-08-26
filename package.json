@@ -1,0 +1,26 @@
+{
+  "name": "minecraft-block-renderer",
+  "version": "1.0.0",
+  "description": "Headless Minecraft block renderer for generating isometric PNGs from vanilla assets",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "generate": "node generateAllStates.js",
+    "smoke-test": "node smokeTest.js",
+    "download-assets": "node assetDownloader.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "sharp": "^0.33.0",
+    "jszip": "^3.10.1",
+    "crypto": "^1.0.1",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "keywords": ["minecraft", "renderer", "block", "png", "headless"],
+  "author": "Pikacnu",
+  "license": "MIT"
+}

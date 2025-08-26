@@ -1,0 +1,55 @@
+name: Render Minecraft Blocks
+
+on:
+  workflow_dispatch:
+    inputs:
+      mc_version:
+        description: 'Minecraft version'
+        required: false
+        default: '1.20.1'
+      generate_all:
+        description: 'Generate all blocks'
+        type: boolean
+        default: false
+      block_id_filter:
+        description: 'Block ID filter'
+        required: false
+      prop_include:
+        description: 'Properties to include'
+        required: false
+      limit:
+        description: 'Limit number of blocks'
+        required: false
+        default: '10'
+      commit_zip:
+        description: 'Commit ZIP artifact'
+        type: boolean
+        default: true
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - run: npm install
+      - name: Set environment variables
+        run: |
+          echo "MC_VERSION=${{ github.event.inputs.mc_version }}" >> $GITHUB_ENV
+          echo "BLOCK_ID_FILTER=${{ github.event.inputs.block_id_filter }}" >> $GITHUB_ENV
+          echo "PROP_INCLUDE=${{ github.event.inputs.prop_include }}" >> $GITHUB_ENV
+          echo "LIMIT=${{ github.event.inputs.limit }}" >> $GITHUB_ENV
+      - run: npm run generate
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: minecraft-blocks
+          path: minecraft-blocks.zip
+      - name: Commit ZIP
+        if: github.event.inputs.commit_zip == 'true'
+        run: |
+          git add minecraft-blocks.zip
+          git commit -m "Add rendered blocks ZIP"
+          git push
